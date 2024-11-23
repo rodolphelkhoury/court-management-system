@@ -19,6 +19,11 @@ class Court extends Model
         'closing_time',
     ];
 
+    public function complex()
+    {
+        return $this->belongsTo(Complex::class);
+    }
+
     public function sections()
     {
         return $this->hasMany(Section::class);
@@ -26,12 +31,12 @@ class Court extends Model
 
     public function court_type()
     {
-        $this->belongsTo(CourtType::class);
+        return $this->belongsTo(CourtType::class);
     }
 
     public function surface_type()
     {
-        $this->belongsTo(SurfaceType::class);
+        return $this->belongsTo(SurfaceType::class);
     }
 
     public function reservations()

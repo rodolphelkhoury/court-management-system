@@ -15,9 +15,10 @@ class Reservation extends Model
         'end_time',
         'total_price',
         'is_canceled',
+        'is_no_show',
     ];
 
-    public function customers()
+    public function customer()
     {
         return $this->belongsTo(Customer::class);
     }

@@ -17,4 +17,9 @@ class Company extends Model
     {
         return $this->hasMany(User::class);
     }
+
+    public function complexes()
+    {
+        return $this->hasMany(Court::class);
+    }
 }

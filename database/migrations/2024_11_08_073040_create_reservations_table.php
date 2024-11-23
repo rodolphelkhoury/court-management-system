@@ -21,6 +21,7 @@ return new class extends Migration
             $table->time('end_time');
             $table->decimal('total_price');
             $table->boolean('is_canceled')->default(false);
+            $table->boolean('is_no_show')->default(false);
             $table->timestamps();
         });
         
