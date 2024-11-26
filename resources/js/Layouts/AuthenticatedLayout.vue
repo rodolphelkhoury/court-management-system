@@ -23,15 +23,21 @@ const showingNavigationDropdown = ref(false);
                             <div
                                 class="hidden space-x-8 sm:-my-px sm:flex"
                             >
-                                <NavLink
+                                <!-- <NavLink
                                     :href="route('dashboard')"
                                     :active="route().current('dashboard')"
                                 >
                                     Dashboard
+                                </NavLink> -->
+                                <NavLink
+                                    :href="route('complex.index')"
+                                    :active="route().current('complex.index') || route().current('get.create.complex') || route().current('complexes.show')"
+                                >
+                                    Complexes
                                 </NavLink>
                                 <NavLink
                                     :href="route('court.index')"
-                                    :active="route().current('court.index') || route().current('get.create.court') || route().current('court.get.reservations')"
+                                    :active="route().current('court.index') || route().current('get.create.court') || route().current('court.get.reservations') || route().current('complex.courts.index') || route().current('get.create.court.reservation') || route().current('court.show') || route().current('get.reservation')"
                                 >
                                     Courts
                                 </NavLink>

@@ -16,7 +16,7 @@ import { createEventsServicePlugin } from '@schedule-x/events-service'
 
 const props = defineProps({
     court: {
-      type: Array,
+      type: Object,
       required: true
     },
     reservations: {
@@ -51,6 +51,9 @@ const calendarApp = createCalendar({
   callbacks: {
     onEventUpdate(event) {
       updateEvent(event);
+    },
+    onEventClick(event) {
+      clickOnEvent(event);
     }
   },
 }, [
@@ -106,7 +109,24 @@ const addEvents = (reservations) => {
 
 const updateEvent = (event) => {
   const updatedReservation = transformEventToReservation(event);
-  axios.put(`/courts/${event.court_id}/reservations/${updatedReservation.id}`, updatedReservation);
+  axios
+    .put(`/courts/${event.court_id}/reservations/${updatedReservation.id}`, updatedReservation)
+    .then((response) => {
+      // Optional: Provide feedback to the user
+    })
+    .catch((error) => {
+      alert(error.response.data.message);
+      const allEvents = eventsServicePlugin.getAll(); // Assuming getAll() retrieves all events
+      allEvents.forEach(existingEvent => {
+        eventsServicePlugin.remove(existingEvent.id);
+      });
+      router.reload({ only: ['reservations'] })
+      addEvents(props.reservations);
+    });
+};
+
+const clickOnEvent = (event) => {
+  router.visit(route('get.reservation', {reservation: event.id}))
 };
 
 addEvents(props.reservations);

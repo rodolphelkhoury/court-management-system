@@ -1,52 +1,71 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
+import Modal from '@/Components/Modal.vue';
+import CreateCustomerComponent from '@/Components/CreateCustomerComponent.vue';
 
 const props = defineProps({
     court: {
+        type: Object,
+        required: true
+    },
+    sections: {
+        type: Array,
+        required: true
+    },
+    customers: {
         type: Array,
         required: true
     },
 });
 
-const court = ref(props.court);
+const sections = ref(props.sections);
+const customers = ref(props.customers);
+const isCustomerModalVisible = ref(false);
 
-// Initial form setup
 const form = useForm({
-    name: '',
-    description: '',
-    complex_id: null,
-    surface_type_id: null,
-    court_type_id: null,
-    hourly_rate: '',
-    opening_time: '',
-    closing_time: '',
-    divisible: false,
-    max_divisions: 0,
+    section_id: null,
+    customer_id: null,
+    reservation_date: '',
+    start_time: '',
+    end_time: '',
+    is_canceled: false,
+    is_no_show: false,
 });
 
 const handleSubmit = () => {
-form.post(route('court.store'), {
+    form.post(route('reservation.store', { court: props.court.id }), {
         onSuccess: () => {
-            // handle success, maybe redirect or show a success message
+            // Success handler
         },
         onError: (errors) => {
-            // handle errors, show validation feedback if needed
-            console.log(errors);
+            alert(errors.message);
         }
     });
 };
 
+const customerCreated = () => {
+    isCustomerModalVisible.value = false;
+    axios.get('/customers')
+        .then(response => {
+            customers.value = response.data; // Update the customers ref with the new data
+        })
+        .catch(error => {
+            console.error('Error fetching customers:', error);
+        });
+};
 
 </script>
-
-
 
 <template>
 
     <Head title="Create Reservation" />
+
+    <Modal :show="isCustomerModalVisible" @close="isCustomerModalVisible = false">
+        <CreateCustomerComponent @customer-created="customerCreated()" />
+    </Modal>
 
     <AuthenticatedLayout>
         <template #header>
@@ -62,116 +81,84 @@ form.post(route('court.store'), {
                 <div class="max-w-4xl mx-auto p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
 
                     <form @submit.prevent="handleSubmit" class="mt-6 space-y-4">
+
                         <div>
-                            <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Court
-                                Name</label>
-                            <input id="name" v-model="form.name" type="text"
+                            <label for="customer_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                Customer
+                            </label>
+                            <div class="flex items-center gap-4">
+                                <select id="customer_id" v-model="form.customer_id"
+                                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+                                    required>
+                                    <option disabled value="">Select Customer</option>
+                                    <option v-for="customer in customers" :key="customer.id" :value="customer.id">
+                                        {{ customer.name }}
+                                    </option>
+                                </select>
+                                <button @click="isCustomerModalVisible = true" type="button"
+                                    class="px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    New
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Reservation Date -->
+                        <div>
+                            <label for="reservation_date"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Reservation
+                                Date</label>
+                            <input id="reservation_date" v-model="form.reservation_date" type="date"
                                 class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                                 required />
                         </div>
 
-                        <div>
-                            <label for="description"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
-                            <textarea id="description" v-model="form.description" rows="3"
-                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-                                required></textarea>
-                        </div>
-
-                        <div>
-                            <label for="complex"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Complex</label>
-                            <select id="complex" v-model="form.complex_id"
-                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-                                required>
-                                <option disabled value="">Select Complex</option>
-                                <option v-for="complex in complexes" :key="complex.id" :value="complex.id">
-                                    {{ complex.name }}
-                                </option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label for="court_type"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Court
-                                Type</label>
-                            <select id="court_type" v-model="form.court_type_id"
-                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-                                required>
-                                <option disabled value="">Select Court Type</option>
-                                <option v-for="courtType in courtTypes" :key="courtType.id" :value="courtType.id">
-                                    {{ courtType.name }}
-                                </option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label for="surface_type"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Surface
-                                Type</label>
-                            <select id="surface_type" v-model="form.surface_type_id"
-                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-                                required>
-                                <option disabled value="">Select Surface Type</option>
-                                <option v-for="surface in surfaceTypes" :key="surface.id" :value="surface.id">
-                                    {{ surface.name }}
-                                </option>
-                            </select>
-                        </div>
-
-
-                        <div>
-                            <label for="hourly_rate"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Hourly
-                                Rate</label>
-                            <input id="hourly_rate" v-model="form.hourly_rate" type="number" step="0.5" min="0"
-                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-                                required />
-                        </div>
-
+                        <!-- Start Time and End Time -->
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label for="opening_time"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Opening
+                                <label for="start_time"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Start
                                     Time</label>
-                                <input id="opening_time" v-model="form.opening_time" type="time"
+                                <input id="start_time" v-model="form.start_time" type="time"
                                     class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                                     required />
                             </div>
-
                             <div>
-                                <label for="closing_time"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Closing
+                                <label for="end_time"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">End
                                     Time</label>
-                                <input id="closing_time" v-model="form.closing_time" type="time"
+                                <input id="end_time" v-model="form.end_time" type="time"
                                     class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                                     required />
                             </div>
                         </div>
 
-                        <div class="flex items-center space-x-3">
-                            <input id="divisible" v-model="form.divisible" type="checkbox"
-                                class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500" />
-                            <label for="divisible" class="text-sm text-gray-700 dark:text-gray-300">Divisible</label>
+                        <!-- Section Selection -->
+                        <div>
+                            <label for="section_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                Section
+                            </label>
+                            <select id="section_id" v-model="form.section_id"
+                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
+                                <option disabled value="">Select Section</option>
+                                <option v-for="section in sections" :key="section.id" :value="section.id">
+                                    {{ section.name }}
+                                </option>
+                            </select>
                         </div>
 
-                        <div v-if="form.divisible">
-                            <label for="max_divisions" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Max Divisions</label>
-                            <input id="max_divisions" v-model="form.max_divisions" type="number" min="0"
-                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-                                required />
-                        </div>
-
+                        <!-- Submit Button -->
                         <div class="mt-6">
                             <button type="submit"
                                 class="w-full px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                Create Court
+                                Create Reservation
                             </button>
                         </div>
                     </form>
 
                     <div class="mt-4 text-center">
-                        <Link href="/courts" class="text-sm text-indigo-600 hover:underline">Back to Court List</Link>
+                        <Link :href="`/courts/${court.id}/reservations`"
+                            class="text-sm text-indigo-600 hover:underline">Back to
+                        Reservation List</Link>
                     </div>
                 </div>
             </div>

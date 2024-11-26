@@ -26,11 +26,17 @@ class CourtController extends Controller
             'courts' => $courts
         ]);
     }
-    
 
     public function getCourt(Request $request, Court $court)
     {
-        return $court;
+        return Inertia::render('Court', [
+            'court' => Court::with(['court_type', 'surface_type', 'sections'])->where('id',$court->id)
+            ->whereHas('complex', function ($query) use ($request) {
+                $query->where('company_id', $request->user()->company_id);
+            })
+            ->orderBy('created_at', 'desc')
+            ->firstOrFail()
+        ]);
     }
 
     public function getCourtReservations(Request $request, Court $court)

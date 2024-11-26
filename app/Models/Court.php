@@ -19,14 +19,14 @@ class Court extends Model
         'closing_time',
     ];
 
-    public function complex()
-    {
-        return $this->belongsTo(Complex::class);
-    }
-
     public function sections()
     {
         return $this->hasMany(Section::class);
+    }
+
+    public function complex()
+    {
+        return $this->belongsTo(Complex::class);
     }
 
     public function court_type()
