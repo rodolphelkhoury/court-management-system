@@ -76,11 +76,16 @@
         <div class="details">
             <p><span class="label">Invoice ID:</span> {{ $invoice->id }}</p>
             <p><span class="label">Customer Name:</span> {{ $invoice->customer->name }}</p>
+            <p><span class="label">Customer Phone Number:</span> {{ $invoice->customer->customer->phone_number }}</p>
             <p><span class="label">Reservation ID:</span> {{ $invoice->reservation_id }}</p>
             <p><span class="label">Court Name:</span> {{ $invoice->reservation->court->name }}</p>
+            <p><span class="label">Court Type:</span> {{ $invoice->reservation->court->court_type->name }}</p>
             <p><span class="label">Date:</span> {{ Carbon::parse($invoice->reservation->reservation_date)->format('d M Y') }}</p>
             <p><span class="label">Due Date:</span> {{ $invoice->due_date ? Carbon::parse($invoice->due_date)->format('d M Y') : 'Not specified' }}</p>
             <p><span class="label">Status:</span> {{ ucfirst($invoice->status) }}</p>
+            @if ($invoice->status == 'paid')
+                <p><span class="label">Paid At:</span> {{ Carbon::parse($invoice->paid_at)->format('d M Y') }}</p>
+            @endif
         </div>
 
         <table class="table">

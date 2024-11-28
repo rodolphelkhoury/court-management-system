@@ -110,8 +110,7 @@ const formatDate = (dateString) => {
                     </h3>
                     <ul class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
                         <li><strong>Name:</strong> {{ invoice.customer.name }}</li>
-                        <li><strong>Email:</strong> {{ invoice.customer.email }}</li>
-                        <li><strong>Phone:</strong> {{ invoice.customer.phone_number }}</li>
+                        <li><strong>Phone:</strong> {{ invoice.customer.customer.phone_number }}</li>
                     </ul>
                 </div>
             </div>

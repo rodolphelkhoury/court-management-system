@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CompanyCustomer;
 use App\Models\Court;
 use App\Models\Customer;
 use App\Models\Invoice;
@@ -38,7 +39,7 @@ class ReservationController extends Controller
         return Inertia::render('CreateReservation', [
             'court' => $court,
             'sections' => $court->sections()->get(),
-            'customers' => Customer::where('company_id', $user->company_id)->get()
+            'customers' => CompanyCustomer::where('company_id', $user->company_id)->get()
         ]);
     }
 
@@ -46,7 +47,7 @@ class ReservationController extends Controller
     {
         $validated = $request->validate([
             'section_id' => 'nullable|exists:sections,id,court_id,' . $court->id,
-            'customer_id' => 'required|exists:customers,id',
+            'customer_id' => 'required|exists:company_customer,id',
             'reservation_date' => 'required|date',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
@@ -55,6 +56,15 @@ class ReservationController extends Controller
         $complex = $court->complex()->firstOrFail();
         if ($complex->company_id != $request->user()->company_id) {
             abort(401, "Unauthorized");
+        }
+
+        $startTime = Carbon::createFromFormat('H:i', $request->start_time);
+        $endTime = Carbon::createFromFormat('H:i', $request->end_time);
+        $openingTime = Carbon::createFromFormat('H:i:s', $court->opening_time);
+        $closingTime = Carbon::createFromFormat('H:i:s', $court->closing_time);
+    
+        if ($startTime->lt($openingTime) || $endTime->gt($closingTime)) {
+            abort(400, "The court will be closed at this time.");
         }
 
         $validated['start_time'] = $validated['start_time'] . ':00';
@@ -72,6 +82,10 @@ class ReservationController extends Controller
         if ($request->section_id) {
             if ($existing_reservation && is_null($existing_reservation->section_id)) {
                 abort(400, "The court is already reserved at this time.");
+            }
+
+            if ($existing_reservation && $existing_reservation->section_id == $request->section_id) {
+                abort(400,'This section is already reserved at this time.');
             }
 
             $section = Section::where('court_id', $court->id)->where('id', $request->section_id)->firstOrFail();
@@ -101,7 +115,7 @@ class ReservationController extends Controller
     {
         $validated = $request->validate([
             'section_id' => 'nullable|exists:sections,id,court_id,' . $court->id,
-            'customer_id' => 'required|exists:customers,id',
+            'customer_id' => 'required|exists:company_customer,id',
             'reservation_date' => 'required|date',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
@@ -110,6 +124,15 @@ class ReservationController extends Controller
         $complex = $court->complex()->firstOrFail();
         if ($complex->company_id != $request->user()->company_id) {
             abort(401, "Unauthorized");
+        }
+
+        $startTime = Carbon::createFromFormat('H:i', $request->start_time);
+        $endTime = Carbon::createFromFormat('H:i', $request->end_time);
+        $openingTime = Carbon::createFromFormat('H:i:s', $court->opening_time);
+        $closingTime = Carbon::createFromFormat('H:i:s', $court->closing_time);
+    
+        if ($startTime->lt($openingTime) || $endTime->gt($closingTime)) {
+            return back()->withErrors(['message' => 'The court will be closed at this time.']);
         }
 
         $validated['start_time'] = $validated['start_time'] . ':00';
@@ -128,6 +151,9 @@ class ReservationController extends Controller
         if ($request->section_id) {
             if ($existing_reservation && is_null($existing_reservation->section_id)) {
                 return back()->withErrors(['message' => 'The court is already reserved at this time.']);
+            }
+            if ($existing_reservation && $existing_reservation->section_id == $request->section_id) {
+                return back()->withErrors(['message' => 'This section is already reserved at this time.']);
             }
 
             $section = Section::where('court_id', $court->id)->where('id', $request->section_id)->firstOrFail();

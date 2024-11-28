@@ -37,9 +37,22 @@ const showingNavigationDropdown = ref(false);
                                 </NavLink>
                                 <NavLink
                                     :href="route('court.index')"
-                                    :active="route().current('court.index') || route().current('get.create.court') || route().current('court.get.reservations') || route().current('complex.courts.index') || route().current('get.create.court.reservation') || route().current('court.show') || route().current('get.reservation')"
+                                    :active="route().current('court.index') || route().current('get.create.court') || route().current('complex.courts.index') || route().current('court.show')"
                                 >
                                     Courts
+                                </NavLink>
+                                <NavLink
+                                    :href="route('court.index')"
+                                    :active="route().current('court.get.reservations') || route().current('get.create.court.reservation') || route().current('get.reservation')"
+                                >
+                                    Reservations
+                                </NavLink>
+
+                                <NavLink
+                                    :href="route('court.index')"
+                                    :active="route().current('reservation.invoice')"
+                                >
+                                    Invoices
                                 </NavLink>
                                 <!-- <NavLink
                                     :href="route('court.get.reservations')"

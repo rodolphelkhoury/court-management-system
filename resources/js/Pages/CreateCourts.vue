@@ -169,11 +169,11 @@ const handleSubmit = () => {
                             </div>
                         </div>
 
-                        <div class="flex items-center space-x-3">
+                        <!-- <div class="flex items-center space-x-3">
                             <input id="divisible" v-model="form.divisible" type="checkbox"
                                 class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500" />
                             <label for="divisible" class="text-sm text-gray-700 dark:text-gray-300">Divisible</label>
-                        </div>
+                        </div> -->
 
                         <div v-if="form.divisible">
                             <label for="max_divisions" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Max Divisions</label>

@@ -52,7 +52,7 @@ class CourtController extends Controller
     {
         $court = Court::firstOrCreate($request->validated());
         
-        return redirect()->route('court.index')->with('success', 'Court created successfully.');
+        return redirect()->route('complex.courts.index', ["complex" => $court->complex_id])->with('success', 'Court created successfully.');
     }
 
     public function update(CourtRequest $request, Court $court)

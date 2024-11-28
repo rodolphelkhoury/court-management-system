@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('reservation_id')->constrained()->onDelete('cascade');
-            $table->foreignId('customer_id')->constrained()->onDelete('cascade');
+            $table->foreignId('customer_id')->constrained('company_customer', 'id')->onDelete('cascade');
             $table->decimal('amount', 8, 2);
             $table->enum('status', ['unpaid', 'paid', 'overdue'])->default('unpaid');
             $table->timestamp('due_date');

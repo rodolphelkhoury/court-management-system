@@ -1,13 +1,10 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
 
-// Emit the event to notify parent components
 const emit = defineEmits(['customerCreated']);
 
-// Initial form setup for Customer
 const form = useForm({
     name: '',
-    email: '',
     phone_number: '',
 });
 
@@ -40,14 +37,6 @@ const handleSubmit = () => {
                         <label for="name"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
                         <input id="name" v-model="form.name" type="text"
-                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-                            required />
-                    </div>
-
-                    <div>
-                        <label for="email"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
-                        <input id="email" v-model="form.email" type="email"
                             class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                             required />
                     </div>

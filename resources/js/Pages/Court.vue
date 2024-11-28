@@ -68,8 +68,8 @@ const sectionCreated = () => {
                     <p class="mb-4 text-gray-600 dark:text-gray-400">{{ court.description }}</p>
                     <ul class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
                         <li><strong>Hourly Rate:</strong> ${{ court.hourly_rate }}</li>
-                        <li><strong>Divisible:</strong> {{ court.divisible ? 'Yes' : 'No' }}</li>
-                        <li><strong>Max Divisions:</strong> {{ court.max_divisions || 'N/A' }}</li>
+                        <!-- <li><strong>Divisible:</strong> {{ court.divisible ? 'Yes' : 'No' }}</li> -->
+                        <!-- <li><strong>Max Divisions:</strong> {{ court.max_divisions || 'N/A' }}</li> -->
                         <li><strong>Opening Time:</strong> {{ court.opening_time }}</li>
                         <li><strong>Closing Time:</strong> {{ court.closing_time }}</li>
                         <li><strong>Court Type:</strong> {{ court.court_type.name }}</li>

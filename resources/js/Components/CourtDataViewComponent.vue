@@ -22,7 +22,7 @@ const props = defineProps({
       <li><strong>Surface:</strong> {{ court.surface_type.name }}</li>
       <li><strong>Hourly Rate:</strong> ${{ court.hourly_rate }}</li>
       <li><strong>Opening Hours:</strong> {{ court.opening_time }} - {{ court.closing_time }}</li>
-      <li><strong>Divisible:</strong> {{ court.divisible ? 'Yes' : 'No' }}</li>
+      <!-- <li><strong>Divisible:</strong> {{ court.divisible ? 'Yes' : 'No' }}</li> -->
     </ul>
   </div>
 </Link>
