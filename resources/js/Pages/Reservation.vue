@@ -98,6 +98,7 @@ const handleInvoiceClick = () => {
                     <ul class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
                         <li><strong>Customer Name:</strong> {{ reservation.customer.name }}</li>
                         <li><strong>Reservation Date:</strong> {{ reservation.reservation_date }}</li>
+                        <li v-if="reservation.section"><strong>Section:</strong> {{ reservation.section.name }}</li>
                         <li><strong>Start Time:</strong> {{ reservation.start_time }}</li>
                         <li><strong>End Time:</strong> {{ reservation.end_time }}</li>
                         <li><strong>Total Price:</strong> ${{ reservation.total_price }}</li>

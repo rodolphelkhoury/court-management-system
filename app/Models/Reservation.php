@@ -19,6 +19,8 @@ class Reservation extends Model
         'is_no_show',
     ];
 
+    public $with = ['section'];
+
     protected static function booted()
     {
         static::addGlobalScope('notCanceled', function (Builder $builder) {
