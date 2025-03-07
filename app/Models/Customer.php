@@ -3,11 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Sanctum\HasApiTokens;
 
 class Customer extends Model
 {
+    use HasApiTokens;
+
     protected $fillable = [
-        'phone_number'
+        'name',
+        'phone_number',
+        'password',
+        'phone_number_verified_at'
     ];
 
     public function companies()
