@@ -66,9 +66,16 @@ const transformReservationsToScheduleEvents = (reservations) => {
   return reservations.map((reservation) => {
     const formatTime = (time) => time.substring(0, 5);
 
+    let titre;
+    if (reservation.section) {
+      titre = `Reservation for ${reservation.customer.name} - ${reservation.section.name}`;
+    } else {
+      titre = `Reservation for ${reservation.customer.name}`;
+    }
+
     return {
       id: reservation.id,
-      title: `Reservation for ${reservation.customer.name}`,
+      title: titre,
       start: `${reservation.reservation_date} ${formatTime(reservation.start_time)}`,
       end: `${reservation.reservation_date} ${formatTime(reservation.end_time)}`,
       customer_id: reservation.customer.id,
@@ -81,6 +88,7 @@ const transformReservationsToScheduleEvents = (reservations) => {
     };
   });
 };
+
 
 const transformEventToReservation = (event) => {
   const extractTime = (datetime) => datetime.split(' ');
