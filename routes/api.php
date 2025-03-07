@@ -17,6 +17,7 @@ Route::middleware('auth:sanctum')->group(function() {
 
     Route::prefix('/reservations')->group(function () {
         Route::get('/', [ReservationController::class, 'index']);
+        Route::get('/{reservation}', [ReservationController::class, 'show']);
     });
 
 });
