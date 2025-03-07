@@ -7,13 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Customer extends Model
 {
     protected $fillable = [
-        'name',
-        'email',
         'phone_number'
     ];
 
-    public function reservations()
+    public function companies()
     {
-        return $this->hasMany(Reservation::class);
+        return $this->belongsToMany(Company::class, 'company_customer');
     }
 }

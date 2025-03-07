@@ -24,14 +24,19 @@ class Court extends Model
         return $this->hasMany(Section::class);
     }
 
+    public function complex()
+    {
+        return $this->belongsTo(Complex::class);
+    }
+
     public function court_type()
     {
-        $this->belongsTo(CourtType::class);
+        return $this->belongsTo(CourtType::class);
     }
 
     public function surface_type()
     {
-        $this->belongsTo(SurfaceType::class);
+        return $this->belongsTo(SurfaceType::class);
     }
 
     public function reservations()

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class Reservation extends Model
 {
@@ -15,11 +16,21 @@ class Reservation extends Model
         'end_time',
         'total_price',
         'is_canceled',
+        'is_no_show',
     ];
 
-    public function customers()
+    public $with = ['section'];
+
+    protected static function booted()
     {
-        return $this->belongsTo(Customer::class);
+        static::addGlobalScope('notCanceled', function (Builder $builder) {
+            $builder->where('is_canceled', 0);  // Assuming '0' means not canceled
+        });
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(CompanyCustomer::class);
     }
 
     public function court()
@@ -31,4 +42,5 @@ class Reservation extends Model
     {
         return $this->belongsTo(Section::class);
     }
+
 }
