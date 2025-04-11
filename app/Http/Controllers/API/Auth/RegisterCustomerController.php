@@ -6,6 +6,7 @@ use App\Domain\Otp\Actions\GenerateOtp;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\Auth\LoginCustomerRequest;
 use App\Http\Requests\API\Auth\RegisterCustomerRequest;
+use App\Http\Requests\API\Auth\VerifyOtpRequest;
 use App\Integrations\Twilio\Actions\SendSMS;
 use App\Models\Customer;
 use Exception;
@@ -55,5 +56,8 @@ class RegisterCustomerController extends Controller
         ];
     }
     
-    
+    public function verifyOtp(VerifyOtpRequest $request)
+    {
+        $customer = $request->auth();
+    }
 }

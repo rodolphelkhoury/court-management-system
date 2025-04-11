@@ -18,5 +18,4 @@ final class GenerateOtp
     
         return $otp;
     }
-    
 }
