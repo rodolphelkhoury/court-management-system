@@ -9,10 +9,10 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [RegisterCustomerController::class, 'register']);
 
 
+Route::get('/courts/', [CourtController::class, 'index']);
 Route::middleware('auth:sanctum')->group(function() {
  
     Route::prefix('/courts')->group(function () {
-        Route::get('/', [CourtController::class, 'index']);
         Route::get('/{court}', [CourtController::class, 'show']);
     });
 
