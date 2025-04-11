@@ -14,7 +14,10 @@ class CourtController extends Controller
 
         $courts = $query->get();
         return response()->json(
-            data: $courts,
+            data: [
+                "courts" => $courts,
+                "status" => 200,
+            ],
         );
     }
 

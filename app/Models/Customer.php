@@ -20,4 +20,14 @@ class Customer extends Model
     {
         return $this->belongsToMany(Company::class, 'company_customer');
     }
+
+    public function otps()
+    {
+        return $this->hasMany(Otp::class);
+    }
+
+    public function validOtps()
+    {
+        return $this->hasMany(Otp::class)->where('expires_at', '>', now());
+    }    
 }

@@ -2,10 +2,18 @@
 
 namespace App\Models;
 
+use App\Traits\Models\HasImages;
 use Illuminate\Database\Eloquent\Model;
 
 class Court extends Model
 {
+    use HasImages;
+
+    protected $with = [
+        'image',
+        'images'
+    ];
+
     protected $fillable = [
         'complex_id',
         'court_type_id',
@@ -17,6 +25,10 @@ class Court extends Model
         'max_divisions',
         'opening_time',
         'closing_time',
+    ];
+
+    protected $casts = [
+        'divisible' => 'boolean',
     ];
 
     public function sections()
