@@ -16,6 +16,10 @@ class Customer extends Model
         'phone_number_verified_at'
     ];
 
+    protected $hidden = [
+        'password',
+    ];
+
     public function companies()
     {
         return $this->belongsToMany(Company::class, 'company_customer');

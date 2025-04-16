@@ -10,7 +10,7 @@ class CourtController extends Controller
 {
     public function index(IndexCourtRequest $request)
     {
-        $query = Court::query();
+        $query = Court::query()->where('name', 'like', '%' . $request->search . '%');
 
         $courts = $query->get();
         return response()->json(

@@ -1,16 +1,18 @@
 <?php
 
-use App\Http\Controllers\API\Auth\RegisterCustomerController;
+use App\Http\Controllers\API\Auth\AuthenticationController;
 use App\Http\Controllers\API\CourtController;
 use App\Http\Controllers\API\CustomerController;
 use App\Http\Controllers\API\ReservationController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/register', [RegisterCustomerController::class, 'register']);
+Route::post('/register', [AuthenticationController::class, 'register']);
+Route::post('/login', [AuthenticationController::class, 'login']);
 
 
-Route::get('/courts/', [CourtController::class, 'index']);
 Route::middleware('auth:sanctum')->group(function() {
+    Route::get('/courts', [CourtController::class, 'index']);
+    Route::post('/verify-otp', [AuthenticationController::class, 'verifyOtp']);
  
     Route::prefix('/courts')->group(function () {
         Route::get('/{court}', [CourtController::class, 'show']);

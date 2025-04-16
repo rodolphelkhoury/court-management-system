@@ -9,12 +9,14 @@ use App\Http\Requests\API\Auth\RegisterCustomerRequest;
 use App\Http\Requests\API\Auth\VerifyOtpRequest;
 use App\Integrations\Twilio\Actions\SendSMS;
 use App\Models\Customer;
+use App\Models\Otp;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 
-class RegisterCustomerController extends Controller
+class AuthenticationController extends Controller
 {
     public function register(RegisterCustomerRequest $request, SendSMS $sendSMS, GenerateOtp $generateOtp)
     {
@@ -28,14 +30,14 @@ class RegisterCustomerController extends Controller
             customer: $customer
         );
     
-        $sendSMS->run(
-            to: $customer->phone_number,
-            body: "Your verification code is: {$otp}. It will expire in 5 minutes."
-        );
+        // $sendSMS->run(
+        //     to: $customer->phone_number,
+        //     body: "Your verification code is: {$otp}. It will expire in 5 minutes."
+        // );
     
         return [
             'token' => $customer->createToken("customer_token")->plainTextToken,
-            'customer' => $customer
+            'customer' => $customer->refresh()
         ];
     }    
 
@@ -51,13 +53,34 @@ class RegisterCustomerController extends Controller
     
         $token = $customer->createToken('customer_token');
         return [
-            'token' => $token,
+            'token' => $token->plainTextToken,
             'customer' => $customer
         ];
     }
     
     public function verifyOtp(VerifyOtpRequest $request)
     {
-        $customer = $request->auth();
+        $customer = $request->user();
+
+        $otpRecord = Otp::where('customer_id', $customer->id)
+            ->where('otp', (int) $request->code)
+            ->where('expires_at', '>', Carbon::now())
+            ->first();
+
+        if ($otpRecord) {
+            $otpRecord->delete();
+            $otpRecord->expires_at = now();
+            $customer->phone_number_verified_at = now();
+            $otpRecord->save();
+            $customer->save();
+            $customer->refresh();
+            return [
+                'verified' => true
+            ];
+        }
+
+        return [
+            'verified' => false
+        ];
     }
 }

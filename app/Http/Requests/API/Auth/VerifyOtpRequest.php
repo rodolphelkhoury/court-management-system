@@ -22,7 +22,7 @@ class VerifyOtpRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'otp' => 'required|string|max:5',
+            'code' => 'required|string|max:6',
         ];
     }
 }

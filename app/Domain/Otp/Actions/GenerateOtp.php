@@ -9,7 +9,7 @@ final class GenerateOtp
 {
     public function run(Customer $customer)
     {
-        $otp = random_int(10000, 99999);
+        $otp = random_int(100000, 999999);
     
         $customer->otps()->create([
             'otp' => $otp,
