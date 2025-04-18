@@ -34,4 +34,9 @@ class Customer extends Model
     {
         return $this->hasMany(Otp::class)->where('expires_at', '>', now());
     }    
+
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
+    }
 }

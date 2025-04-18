@@ -12,6 +12,7 @@ Route::post('/login', [AuthenticationController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function() {
     Route::get('/courts', [CourtController::class, 'index']);
+    // Route::get('/reservations', [ReservationController::class, 'getCustomerReservations']);
     Route::post('/verify-otp', [AuthenticationController::class, 'verifyOtp']);
  
     Route::prefix('/courts')->group(function () {

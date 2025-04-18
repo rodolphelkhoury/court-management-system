@@ -12,19 +12,27 @@ class ReservationController extends Controller
     public function index(IndexReservationRequest $request)
     {
         $customer = $request->user();
-        $query = Reservation::where('customer_id', $customer->id);
         $now = now();
-        $upcomingReservations = $query->where('end_date', '>', $now)->get();
-        $completedReservations = $query->where('end_date', '<=', $now)->get();
+    
+        $query = Reservation::where('customer_id', $customer->id);
+    
+        $upcomingReservations = (clone $query)->whereRaw(
+            "STR_TO_DATE(CONCAT(reservation_date, ' ', end_time), '%Y-%m-%d %H:%i:%s') > ?",
+            [$now]
+        )->get();
+    
+        $completedReservations = (clone $query)->whereRaw(
+            "STR_TO_DATE(CONCAT(reservation_date, ' ', end_time), '%Y-%m-%d %H:%i:%s') <= ?",
+            [$now]
+        )->get();
     
         $reservations = [
             'upcoming' => $upcomingReservations,
             'completed' => $completedReservations,
+            'status' => 200
         ];
-
-        return response()->json(
-            data: $reservations
-        );
+    
+        return response()->json(data: $reservations);
     }
 
     public function show(Reservation $reservation, ShowReservationRequest $request)

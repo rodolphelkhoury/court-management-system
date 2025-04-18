@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('court_id')->nullable()->constrained('courts')->nullOnDelete()->cascadeOnUpdate();
             $table->foreignId('section_id')->nullable()->constrained('sections')->nullOnDelete()->cascadeOnUpdate();
-            $table->foreignId('customer_id')->constrained('company_customer')->cascadeOnUpdate();
+            $table->foreignId('customer_id')->constrained('customers')->cascadeOnUpdate();
             $table->date('reservation_date');
             $table->time('start_time');
             $table->time('end_time');

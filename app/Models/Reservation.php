@@ -19,18 +19,23 @@ class Reservation extends Model
         'is_no_show',
     ];
 
-    public $with = ['section'];
+    public $with = ['section', 'court'];
+
+    protected $casts = [
+        'is_canceled' => 'boolean',
+        'is_no_show' => 'boolean',
+    ];
 
     protected static function booted()
     {
         static::addGlobalScope('notCanceled', function (Builder $builder) {
-            $builder->where('is_canceled', 0);  // Assuming '0' means not canceled
+            $builder->where('is_canceled', 0);  // '0' means not canceled
         });
     }
 
     public function customer()
     {
-        return $this->belongsTo(CompanyCustomer::class);
+        return $this->belongsTo(Customer::class);
     }
 
     public function court()
@@ -42,5 +47,4 @@ class Reservation extends Model
     {
         return $this->belongsTo(Section::class);
     }
-
 }
