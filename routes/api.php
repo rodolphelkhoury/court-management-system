@@ -17,11 +17,13 @@ Route::middleware('auth:sanctum')->group(function() {
  
     Route::prefix('/courts')->group(function () {
         Route::get('/{court}', [CourtController::class, 'show']);
+        Route::get('/{court}/available-reservations', [CourtController::class, 'getAvailableReservations']);
     });
 
     Route::prefix('/reservations')->group(function () {
         Route::get('/', [ReservationController::class, 'index']);
         Route::get('/{reservation}', [ReservationController::class, 'show']);
+        Route::post('/{court}', [ReservationController::class, 'store']);
     });
 
     Route::prefix('/customers')->group(function () {

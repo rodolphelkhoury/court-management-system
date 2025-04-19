@@ -42,6 +42,7 @@ return new class extends Migration
             $table->integer('max_divisions')->default(1);
             $table->time('opening_time');
             $table->time('closing_time');
+            $table->decimal('reservation_duration', 4, 2)->nullable();
             $table->timestamps();
         });
 
@@ -52,7 +53,6 @@ return new class extends Migration
             $table->decimal('hourly_rate');
             $table->timestamps();
         });
-        
     }
 
     /**
