@@ -4,6 +4,7 @@ use App\Http\Controllers\API\Auth\AuthenticationController;
 use App\Http\Controllers\API\CourtController;
 use App\Http\Controllers\API\CustomerController;
 use App\Http\Controllers\API\ReservationController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthenticationController::class, 'register']);
@@ -11,6 +12,9 @@ Route::post('/login', [AuthenticationController::class, 'login']);
 
 
 Route::middleware('auth:sanctum')->group(function() {
+    Route::get('/customer', function(Request $request) {
+        return $request->user();
+    });
     Route::get('/courts', [CourtController::class, 'index']);
     // Route::get('/reservations', [ReservationController::class, 'getCustomerReservations']);
     Route::post('/verify-otp', [AuthenticationController::class, 'verifyOtp']);
@@ -29,5 +33,4 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::prefix('/customers')->group(function () {
         Route::get('/{reservation}', [CustomerController::class, 'show']);
     });
-
 });
