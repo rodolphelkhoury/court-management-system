@@ -8,6 +8,7 @@ use App\Http\Requests\API\Auth\LoginCustomerRequest;
 use App\Http\Requests\API\Auth\RegisterCustomerRequest;
 use App\Http\Requests\API\Auth\VerifyOtpRequest;
 use App\Integrations\Twilio\Actions\SendSMS;
+use App\Integrations\WhatsApp\Actions\SendWhatsAppMessage;
 use App\Models\Customer;
 use App\Models\Otp;
 use Carbon\Carbon;
@@ -18,7 +19,7 @@ use Illuminate\Validation\ValidationException;
 
 class AuthenticationController extends Controller
 {
-    public function register(RegisterCustomerRequest $request, SendSMS $sendSMS, GenerateOtp $generateOtp)
+    public function register(RegisterCustomerRequest $request, SendWhatsAppMessage $sendWhatsApp, GenerateOtp $generateOtp)
     {
         $customer = new Customer();
         $customer->name = $request->name;
@@ -29,11 +30,11 @@ class AuthenticationController extends Controller
         $otp = $generateOtp->run(
             customer: $customer
         );
-    
-        // $sendSMS->run(
-        //     to: $customer->phone_number,
-        //     body: "Your verification code is: {$otp}. It will expire in 5 minutes."
-        // );
+
+        $sendWhatsApp->sendTemplate(
+            to: '961'.$customer->phone_number,
+            otp: strval($otp)
+        );
     
         return [
             'token' => $customer->createToken("customer_token")->plainTextToken,
