@@ -42,6 +42,8 @@ return new class extends Migration
             $table->integer('max_divisions')->default(1);
             $table->time('opening_time');
             $table->time('closing_time');
+            $table->decimal('latitude', 11, 8);
+            $table->decimal('longitude', 11, 8);
             $table->decimal('reservation_duration', 4, 2)->nullable();
             $table->timestamps();
         });

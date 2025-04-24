@@ -14,6 +14,8 @@ class Court extends Model
         'images'
     ];
 
+    protected $appends = ['image_url'];
+
     protected $fillable = [
         'complex_id',
         'court_type_id',
@@ -25,6 +27,9 @@ class Court extends Model
         'max_divisions',
         'opening_time',
         'closing_time',
+        'reservation_duration',
+        'latitude',
+        'longitude',
     ];
 
     protected $casts = [
@@ -54,5 +59,10 @@ class Court extends Model
     public function reservations()
     {
         return $this->hasMany(Reservation::class);
+    }
+
+    public function getImageUrlAttribute()
+    {
+        return $this->image?->filepath;
     }
 }
