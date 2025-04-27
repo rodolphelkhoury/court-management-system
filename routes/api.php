@@ -31,6 +31,7 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::post('/{court}', [ReservationController::class, 'store']);
     });
 
+    Route::put('/customer/profile', [CustomerController::class, 'update']);
     Route::prefix('/customers')->group(function () {
         Route::get('/{reservation}', [CustomerController::class, 'show']);
     });
