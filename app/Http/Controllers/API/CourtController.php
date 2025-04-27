@@ -14,19 +14,31 @@ class CourtController extends Controller
     public function index(IndexCourtRequest $request)
     {
         $searchTerm = trim($request->search);
+        $courtType = trim($request->court_type);
         
-        $query = Court::query()
-            ->where(function($q) use ($searchTerm) {
+        $query = Court::query();
+        
+        if (!empty($searchTerm)) {
+            $query->where(function($q) use ($searchTerm) {
                 $q->where('name', 'like', '%' . $searchTerm . '%')
                   ->orWhere('name', 'like', '%' . str_replace(' ', '%', $searchTerm) . '%');
-            })
-            ->orderByRaw("
-                CASE 
-                    WHEN name LIKE ? THEN 0 
-                    WHEN name LIKE ? THEN 1 
-                    ELSE 2 
-                END
-            ", ["$searchTerm%", "%$searchTerm%"]);
+            });
+        }
+        
+        if (!empty($courtType)) {
+            $query->whereHas('court_type', function ($q) use ($courtType) {
+                $q->where('name', $courtType);
+            });            
+        }
+        
+        // Apply ordering
+        $query->orderByRaw("
+            CASE 
+                WHEN name LIKE ? THEN 0 
+                WHEN name LIKE ? THEN 1 
+                ELSE 2 
+            END
+        ", ["$searchTerm%", "%$searchTerm%"]);
     
         $courts = $query->get();
         

@@ -11,10 +11,14 @@ class Court extends Model
 
     protected $with = [
         'image',
-        'images'
+        'images',
     ];
 
-    protected $appends = ['image_url'];
+    protected $appends = [
+        'image_url',
+        'court_type_name',
+        'surface_type_name',
+    ];
 
     protected $fillable = [
         'complex_id',
@@ -64,5 +68,15 @@ class Court extends Model
     public function getImageUrlAttribute()
     {
         return $this->image?->filepath;
+    }
+
+    public function getCourtTypeNameAttribute()
+    {
+        return $this->court_type?->name;
+    }
+
+    public function getSurfaceTypeNameAttribute()
+    {
+        return $this->surface_type?->name;
     }
 }
