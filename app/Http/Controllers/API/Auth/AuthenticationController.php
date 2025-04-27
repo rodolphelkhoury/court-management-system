@@ -13,6 +13,7 @@ use App\Models\Customer;
 use App\Models\Otp;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -145,5 +146,44 @@ class AuthenticationController extends Controller
             'verified' => true,
             'message' => 'Phone number verified successfully.'
         ];
+    }
+
+    public function resendOtp(Request $request, SendWhatsAppMessage $sendWhatsApp, GenerateOtp $generateOtp)
+    {
+        $customer = $request->user();
+        
+        if ($customer->phone_number_verified_at) {
+            return response()->json([
+                'message' => 'Phone number is already verified.'
+            ], 400);
+        }
+        
+        $latestOtp = Otp::where('customer_id', $customer->id)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        
+        if ($latestOtp) {
+            Otp::where('customer_id', $customer->id)->delete();
+        }
+        
+        $otp = $generateOtp->run(
+            customer: $customer
+        );
+        
+        try {
+            $sendWhatsApp->sendTemplate(
+                to: $customer->phone_number,
+                otp: strval($otp)
+            );
+            
+            return response()->json([
+                'message' => 'Verification code has been sent to your phone number.'
+            ]);
+        } catch (\Exception $e) {
+            info('Failed to send WhatsApp OTP: ' . $e->getMessage());
+            return response()->json([
+                'message' => 'Failed to send verification code. Please try again later.'
+            ], 500);
+        }
     }
 }

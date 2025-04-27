@@ -12,6 +12,7 @@ Route::post('/login', [AuthenticationController::class, 'login']);
 
 
 Route::middleware('auth:sanctum')->group(function() {
+    Route::post('/resend-otp', [AuthenticationController::class, 'resendOtp']);
     Route::get('/customer', function(Request $request) {
         return $request->user();
     });
