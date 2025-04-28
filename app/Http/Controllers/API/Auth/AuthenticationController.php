@@ -75,6 +75,12 @@ class AuthenticationController extends Controller
             throw ValidationException::withMessages([
                 'phone_number' => ['This phone number does not exist in our records.'],
             ]);
+        } else {
+            if (is_null($customer->phone_number_verified_at)) {
+                throw ValidationException::withMessages([
+                    'password' => ['The provided phone number is not verified.'],
+                ]);
+            }
         }
         
         if (!Hash::check($request->password, $customer->password)) {

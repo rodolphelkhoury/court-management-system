@@ -44,6 +44,7 @@ return new class extends Migration
             $table->time('closing_time');
             $table->decimal('latitude', 11, 8);
             $table->decimal('longitude', 11, 8);
+            $table->string('address_line');
             $table->decimal('reservation_duration', 4, 2)->nullable();
             $table->timestamps();
         });

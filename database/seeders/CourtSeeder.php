@@ -51,6 +51,7 @@ class CourtSeeder extends Seeder
             'reservation_duration' => $faker->randomElement($allowedDurations),
             'longitude' => 35.569310079703214,
             'latitude' => 33.89134451178183, 
+            'address_line' => 'beirut, jdeideh'
         ]);
 
         Image::create([
@@ -78,7 +79,8 @@ class CourtSeeder extends Seeder
             'closing_time' => '23:00:00',
             'reservation_duration' => $faker->randomElement($allowedDurations), 
             'longitude' => 35.55193522379884,
-            'latitude' => 33.88392238125481
+            'latitude' => 33.88392238125481,
+            'address_line' => 'beirut, dekwaneh'
         ]);
 
         Image::create([
@@ -106,7 +108,8 @@ class CourtSeeder extends Seeder
             'closing_time' => '23:00:00',
             'reservation_duration' => $faker->randomElement($allowedDurations),
             'longitude' => 35.560716282447956,
-            'latitude' => 33.892653679241505
+            'latitude' => 33.892653679241505,
+            'address_line' => 'beirut, baouchriyeh'
         ]);
 
         Image::create([
@@ -134,7 +137,8 @@ class CourtSeeder extends Seeder
             'closing_time' => '23:00:00',
             'reservation_duration' => $faker->randomElement($allowedDurations),
             'longitude' => 35.56679876612841,
-            'latitude' => 33.89982744957849
+            'latitude' => 33.89982744957849,
+            'address_line' => 'beirut, dekwaneh'
         ]);
 
         Image::create([
@@ -162,7 +166,8 @@ class CourtSeeder extends Seeder
             'closing_time' => '23:00:00',
             'reservation_duration' => $faker->randomElement($allowedDurations),
             'longitude' => 35.583691381556115,
-            'latitude' => 33.91073267926788
+            'latitude' => 33.91073267926788,
+            'address_line' => 'antelias'
         ]);
 
         Image::create([
@@ -190,7 +195,8 @@ class CourtSeeder extends Seeder
             'closing_time' => '20:00:00',
             'reservation_duration' => $faker->randomElement($allowedDurations),
             'longitude' => 35.549386164258955,
-            'latitude' => 33.87712173648952, 
+            'latitude' => 33.87712173648952,
+            'address_line' => 'beirut, dekwaneh'
         ]);
 
         Image::create([
@@ -219,6 +225,7 @@ class CourtSeeder extends Seeder
             'reservation_duration' => $faker->randomElement($allowedDurations),
             'longitude' => 35.58017434347861,
             'latitude' => 33.876172843516265, 
+            'address_line' => 'matn, fanar'
         ]);
 
         Image::create([
@@ -246,7 +253,8 @@ class CourtSeeder extends Seeder
             'closing_time' => '23:00:00',
             'reservation_duration' => $faker->randomElement($allowedDurations),
             'longitude' => 35.52879636216507,
-            'latitude' => 33.86546653087971, 
+            'latitude' => 33.86546653087971,
+            'address_line' => 'baabda, hazmieh'
         ]);
 
         Image::create([

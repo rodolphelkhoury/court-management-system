@@ -21,7 +21,9 @@ class CourtController extends Controller
         if (!empty($searchTerm)) {
             $query->where(function($q) use ($searchTerm) {
                 $q->where('name', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('name', 'like', '%' . str_replace(' ', '%', $searchTerm) . '%');
+                  ->orWhere('name', 'like', '%' . str_replace(' ', '%', $searchTerm) . '%')
+                  ->orWhere('address_line', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('address_line', 'like', '%' . str_replace(' ', '%', $searchTerm) . '%');
             });
         }
         
@@ -39,14 +41,14 @@ class CourtController extends Controller
                 ELSE 2 
             END
         ", ["$searchTerm%", "%$searchTerm%"]);
-    
+        
         $courts = $query->get();
         
         return response()->json([
             "courts" => $courts,
             "status" => 200,
         ]);
-    }
+    }    
 
     public function show(Court $court)
     {

@@ -34,6 +34,7 @@ class Court extends Model
         'reservation_duration',
         'latitude',
         'longitude',
+        'address_line'
     ];
 
     protected $casts = [
